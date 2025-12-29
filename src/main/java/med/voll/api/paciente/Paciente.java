@@ -1,9 +1,7 @@
-package med.voll.api.medico;
+package med.voll.api.paciente;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,63 +13,60 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import med.voll.api.endereco.Endereco;
 
-@Table(name="medicos")
-@Entity(name = "Medico")
+
+@Table(name="pacientes")
+@Entity(name = "Paciente")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Medico {
-
-
+public class Paciente {
+	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String nome;
-	private String email;
-	private String telefone;
-	private String crm; 
-	private Boolean ativo; 
+	Long id;
 	
-	@Enumerated(EnumType.STRING)
-	private Especialidade especialidade;
-	
+    String nome;
+    String email;
+    String telefone;
+    String cpf;
+    Boolean ativo;
+    
 	@Embedded
 	private Endereco endereco; 
 	
-	public Medico(DadosCadastroMedico dados) {
-		
+	public Paciente(DadosCadastroPaciente dados) {
+		ativo = true;
 		this.nome = dados.nome();
 		this.email = dados.email(); 
 		this.telefone = dados.telefone(); 
-		this.crm = dados.crm(); 
-		
-		this.especialidade= dados.especialidade();
-		this.ativo=true;
-		
+		this.cpf = dados.cpf(); 
 		this.endereco = new Endereco(dados); 
-		
-		
 		
 	}
 
-	public void atualizarInformacoes(@Valid DadosAtualizacaoMedico dados) {
-		
+	public void atualizarInformacoes(@Valid DadosAtualizacaoPaciente dados) {
+
 		if(dados.nome() != null) {
 			this.nome = dados.nome();
+		}
+		
+		if(dados.email() != null) {
+			this.email = dados.email();
 		}
 		
 		if(dados.telefone() != null) {
 			this.telefone = dados.telefone();
 		}
 		
-		if(dados.endereco()!=null){
-			this.endereco.atualizarInformacoes(dados.endereco());
+		if(dados.cpf() != null) {
+			this.cpf = dados.cpf(); 
 		}
-		
+
+ 
 	}
 
 	public void excluir() {
-		this.ativo= false;
+		this.ativo= false;		
 	}
 	
 }
